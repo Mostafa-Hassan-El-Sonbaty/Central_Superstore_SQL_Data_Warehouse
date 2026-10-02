@@ -289,7 +289,7 @@ Technology demonstrates the strongest overall profit margin, approximately **19�
 
 ### 🪑 Furniture & Discounting
 
-Furniture — particularly the **Tables** sub-category — shows profitability pressure when higher discounts are applied, with some transactions resulting in net losses.
+Furniture, particularly the **Tables** sub-category, shows profitability pressure when higher discounts are applied, with some transactions resulting in net losses.
 
 ### 👥 Customer Profit Concentration
 
