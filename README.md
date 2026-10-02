@@ -1,95 +1,433 @@
 # 🏪 Central Superstore - SQL Data Warehouse & Business Analytics
 
-> A PostgreSQL star-schema data warehouse built end-to-end from a raw retail extract, normalized, indexed, and queried for real business insights.
+> An end-to-end PostgreSQL data warehouse project that transforms raw retail data into a structured **star-schema analytical model**, enabling business reporting, customer analysis, profitability analysis, and performance optimization.
 
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql&logoColor=white)]()
-[![SQL](https://img.shields.io/badge/SQL-Advanced-orange)]()
-[![Status](https://img.shields.io/badge/Status-Complete-success)]()
-
----
-
-## 📌 Overview
-
-This project transforms a flat, denormalized retail dataset **2,323 order line items** from the Central US region (2013–2017) into a clean, query-ready **star schema data warehouse**. A full analytics layer is built on top to analyze sales trends, customer segmentation, profitability breakdowns, and operational KPIs.
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql\&logoColor=white)
+![SQL](https://img.shields.io/badge/SQL-Advanced-orange)
+![Data Warehouse](https://img.shields.io/badge/Data%20Warehouse-Star%20Schema-blue)
+![Status](https://img.shields.io/badge/Status-Complete-success)
 
 ---
 
-## 🗂️ Star Schema Design
+## 📌 Project Overview
 
-The database relies on a centralized fact table connected to 5 dimensional tables and a staging table for raw data processing. 
+**Central Superstore** is an end-to-end SQL Data Warehouse and Business Analytics project built using **PostgreSQL**.
 
+The project starts with a raw, denormalized retail dataset containing **2,323 order line items** from the Central US region covering **2013–2017**.
 
+The raw data is transformed through staging and ETL into a structured **star schema** with a central sales fact table and five supporting dimensions.
 
+On top of the warehouse, an analytical SQL layer provides business insights into:
 
+* Sales performance and trends
+* Profitability
+* Customer behavior and segmentation
+* Product performance
+* Discount impact
+* Shipping performance
+* Year-over-year growth
+* Top-performing products
+* Operational KPIs
 
-| Table | Type | Rows | Description |
-|---|---|---|---|
-| `staging_sales` | Raw landing table | 2,323 | Unprocessed denormalized CSV data |
-| `dim_date` | Dimension | ~1,460 | Calendar breakdown supporting role-playing (Order/Ship dates) |
-| `dim_customer` | Dimension | 629 | Customer details and segmentation |
-| `dim_product` | Dimension | 1,326 | Product hierarchies (Category/Sub-category) |
-| `dim_location` | Dimension | 195 | Geographic data (City/State/Region/Postal) |
-| `dim_ship_mode` | Dimension | 4 | Shipping method definitions |
-| `fact_sales` | Fact | 2,323 | Transactional metrics (Sales, Quantity, Discount, Profit) |
+---
 
-**7 tables total** fully normalized, surrogate-keyed, and indexed.
+## 🏗️ Data Warehouse Architecture
+
+The warehouse follows a **star schema** design.
+
+```text
+                         ┌───────────────┐
+                         │   dim_date    │
+                         └───────┬───────┘
+                                 │
+                                 │
+┌────────────────┐       ┌───────▼────────┐       ┌─────────────────┐
+│ dim_customer   │──────▶│                │◀──────│  dim_product    │
+└────────────────┘       │   fact_sales   │       └─────────────────┘
+                         │                │
+┌────────────────┐       └───────┬────────┘       ┌─────────────────┐
+│ dim_location   │───────────────┤                │ dim_ship_mode   │
+└────────────────┘               │                └─────────────────┘
+                                 │
+                                 ▼
+                         Sales Transactions
+```
+
+### Grain
+
+The grain of `fact_sales` is:
+
+> **One row per order line item.**
+
+This allows transactional metrics such as Sales, Quantity, Discount, and Profit to be analyzed across different business dimensions.
+
+---
+
+## 🗂️ Database Schema
+
+| Table           | Type      |   Rows | Description                                                           |
+| --------------- | --------- | -----: | --------------------------------------------------------------------- |
+| `staging_sales` | Staging   |  2,323 | Raw denormalized CSV data                                             |
+| `dim_date`      | Dimension | ~1,460 | Calendar attributes used for order and ship dates                     |
+| `dim_customer`  | Dimension |    629 | Customer details and segmentation attributes                          |
+| `dim_product`   | Dimension |  1,326 | Product hierarchy including category and sub-category                 |
+| `dim_location`  | Dimension |    195 | Geographic information including city, state, region, and postal code |
+| `dim_ship_mode` | Dimension |      4 | Shipping method definitions                                           |
+| `fact_sales`    | Fact      |  2,323 | Sales transactions and measurable business metrics                    |
+
+**Total: 7 tables**
+
+The analytical model uses **surrogate keys, primary/foreign key constraints, and indexes** to support reliable relationships and efficient querying.
+
+---
+
+## 🔄 ETL Pipeline
+
+The project follows a simple warehouse pipeline:
+
+```text
+Raw CSV
+   │
+   ▼
+Staging Table
+   │
+   │  Data Cleaning
+   │  Deduplication
+   │  Transformation
+   │  Key Generation
+   ▼
+Dimension Tables
+   │
+   ▼
+Fact Table
+   │
+   ▼
+Analytical Queries
+   │
+   ├── Views
+   ├── KPI Reports
+   ├── Table Functions
+   └── Performance Analysis
+```
+
+### ETL Process
+
+1. Load the raw CSV into `staging_sales`.
+2. Clean and standardize the source data.
+3. Extract unique business entities into dimension tables.
+4. Generate surrogate keys for dimensions.
+5. Resolve dimension keys for each transaction.
+6. Load transactional metrics into `fact_sales`.
+7. Apply indexes and constraints.
+8. Build the analytical SQL layer.
 
 ---
 
 ## 📁 Project Structure
 
-| File | What it does |
-|---|---|
-| `1- Setting up.sql` | Builds staging + dimension + fact tables, with PK/FK constraints and performance indexes |
-| `2- Loading Data.sql` | Bulk-loads the raw CSV into staging via `COPY` |
-| `3- ETL.sql` | Transforms staging data into the star schema (dimensions + fact) |
-| `4- Queries.sql` | 18 analytical queries, 2 views, 1 stored procedure, 1 table function, and a query-optimization example |
+```text
+Central-Superstore/
+│
+├── 01_schema.sql
+├── 02_load_data.sql
+├── 03_etl.sql
+├── 04_queries.sql
+│
+├── data/
+│   └── superstore.csv
+│
+└── README.md
+```
+
+### SQL Scripts
+
+| File               | Purpose                                                                            |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| `01_schema.sql`    | Creates staging, dimension, and fact tables with PK/FK constraints and indexes     |
+| `02_load_data.sql` | Loads the raw CSV data into the staging table using PostgreSQL `COPY`              |
+| `03_etl.sql`       | Transforms staging data and populates the dimensional model                        |
+| `04_queries.sql`   | Contains analytical queries, views, routines, functions, and optimization examples |
 
 ---
 
-✨ Analytics & SQL Techniques
-The 04_queries.sql file demonstrates advanced SQL data analysis, featuring:
+# 📊 Analytics & SQL Techniques
 
-📊 18 Analytical Queries: Covering profitability metrics, Yo-Y sales trends, customer behavior, and shipping fulfillment times.
+The analytical layer demonstrates advanced SQL techniques used in real-world data analysis and data warehousing.
 
-🔗 Multi-table JOINs: Across all dimensions and the central fact table.
+### 📈 Business Analysis
 
-🧩 CTEs: Utilized for staged trend analysis (monthly/yearly) and ranked top-N lookups.
+**18 analytical queries** covering:
 
-🪄 CASE Expressions: Generating profitability tiers, customer segments, and discount bands.
+* Sales and profit analysis
+* Year-over-year sales trends
+* Monthly performance
+* Customer behavior
+* Product performance
+* Profitability analysis
+* Discount impact
+* Shipping fulfillment time
+* Outlier detection
+* Top-N analysis
 
-🔍 Subqueries: Both correlated and scalar for outlier detection (e.g., above-average sales).
+### 🔗 Multi-Table JOINs
 
-📈 Window Functions: Implementation of LAG(), ROW_NUMBER(), and running totals.
+Queries combine the central fact table with multiple dimensions to answer business questions across:
 
-👁️ Views: Abstractions like vw_monthly_sales_summary and vw_customer_profitability.
+* Customers
+* Products
+* Locations
+* Dates
+* Shipping methods
 
-⚙️ Stored Procedure: sp_kpi_report(start_date, end_date) for dynamically generating KPI summaries.
+### 🧩 Common Table Expressions
 
-🧮 Table Function: sp_top_n_products(category, n) to return customized top-performing products.
+CTEs are used to break complex analytical logic into readable stages, including:
 
-🚀 Query Optimization: Strategic indexing and performance profiling using EXPLAIN ANALYZE.
+* Monthly and yearly trend analysis
+* Ranked results
+* Top-N analysis
+* Intermediate calculations
 
-🚀 Quick Start Guide
+### 🪄 CASE Expressions
 
-1- Clone the repository and initialize the database:
+`CASE` logic is used to create analytical classifications such as:
+
+* Profitability tiers
+* Customer segments
+* Discount bands
+
+### 🔍 Subqueries
+
+Both scalar and correlated subqueries are used for analysis such as:
+
+* Above-average sales
+* Outlier identification
+* Comparative analysis
+
+### 📊 Window Functions
+
+The project demonstrates:
+
+* `LAG()` for period-over-period comparisons
+* `ROW_NUMBER()` for ranking
+* Running totals
+* Partitioned analytical calculations
+
+---
+
+# 👁️ SQL Views
+
+The project includes reusable analytical views that simplify reporting.
+
+### `vw_monthly_sales_summary`
+
+Provides monthly sales performance for easier trend analysis and reporting.
+
+### `vw_customer_profitability`
+
+Provides customer-level profitability metrics for identifying valuable and potentially unprofitable customer segments.
+
+---
+
+# ⚙️ Stored Procedure
+
+### `sp_kpi_report(start_date, end_date)`
+
+Generates a KPI summary for a user-defined date range.
+
+Example:
+
+```sql
+CALL sp_kpi_report(
+    '2016-01-01',
+    '2016-12-31'
+);
+```
+
+This allows KPI reporting without rewriting the underlying analytical query.
+
+---
+
+# 🧮 Table Function
+
+### `fn_top_n_products(category, n)`
+
+Returns the top-performing products for a selected category.
+
+Example:
+
+```sql
+SELECT *
+FROM fn_top_n_products('Technology', 5);
+```
+
+> The function name uses the `fn_` prefix to distinguish it from the stored procedure.
+
+---
+
+# 🚀 Query Optimization
+
+The project also demonstrates basic SQL performance analysis using:
+
+```sql
+EXPLAIN ANALYZE
+```
+
+Indexes are created on important keys and frequently queried attributes to improve query performance.
+
+The optimization example compares query execution behavior before and after indexing.
+
+---
+
+# 💡 Key Business Insights
+
+The analysis produced several notable findings from the dataset:
+
+### 🖥️ Technology Profitability
+
+Technology demonstrates the strongest overall profit margin, approximately **19–20%** in the analyzed data.
+
+### 🪑 Furniture & Discounting
+
+Furniture — particularly the **Tables** sub-category — shows profitability pressure when higher discounts are applied, with some transactions resulting in net losses.
+
+### 👥 Customer Profit Concentration
+
+A relatively small group of repeat customers contributes a disproportionate share of total profit, highlighting the importance of customer-level profitability analysis.
+
+> These insights are derived from the project's analytical queries and should be interpreted within the scope of the dataset.
+
+---
+
+# 🛠️ Tech Stack
+
+| Technology            | Usage                             |
+| --------------------- | --------------------------------- |
+| **PostgreSQL 16**     | Database & analytical engine      |
+| **SQL**               | Data transformation and analytics |
+| **Star Schema**       | Data warehouse architecture       |
+| **CTEs**              | Complex query organization        |
+| **Window Functions**  | Advanced analytics                |
+| **Views**             | Reusable reporting layers         |
+| **Stored Procedures** | Parameterized KPI reporting       |
+| **Table Functions**   | Reusable Top-N analysis           |
+| **EXPLAIN ANALYZE**   | Query performance analysis        |
+
+---
+
+# 🚀 Quick Start
+
+## 1. Create the Database
+
+```bash
 createdb central_superstore
+```
 
-2- Execute the scripts in sequence (ensure you update the CSV path inside 02_load_data.sql before running it):
+Or from PostgreSQL:
+
+```sql
+CREATE DATABASE central_superstore;
+```
+
+---
+
+## 2. Run the SQL Scripts
+
+Execute the scripts in the following order:
+
+```bash
 psql -d central_superstore -f 01_schema.sql
 psql -d central_superstore -f 02_load_data.sql
 psql -d central_superstore -f 03_etl.sql
 psql -d central_superstore -f 04_queries.sql
+```
 
-3- Test the built-in routines directly in your SQL client:
--- Generate a KPI report for 2016
-CALL sp_kpi_report('2016-01-01', '2016-12-31');
+> Before running `02_load_data.sql`, update the CSV file path used by the PostgreSQL `COPY` command.
 
--- Get the top 5 most profitable tech products
-SELECT * FROM sp_top_n_products('Technology', 5);
+---
 
-## 🧠 Key Insight Examples
+## 3. Test the Analytical Layer
 
-- **Technology** carries the healthiest profit margin (~19–20%)
-- **Furniture**, especially the Tables sub-category, slips into net losses once heavy discounting is applied
-- A small number of **repeat customers** drive a disproportionate share of total profit
+Generate a KPI report:
+
+```sql
+CALL sp_kpi_report(
+    '2016-01-01',
+    '2016-12-31'
+);
+```
+
+Get the top 5 products in Technology:
+
+```sql
+SELECT *
+FROM fn_top_n_products(
+    'Technology',
+    5
+);
+```
+
+---
+
+# 📌 What This Project Demonstrates
+
+This project demonstrates practical experience with:
+
+* Designing a relational data warehouse
+* Building a star-schema dimensional model
+* Working with staging tables
+* ETL and data transformation
+* Primary and foreign key relationships
+* Surrogate keys
+* SQL data cleaning
+* Advanced analytical SQL
+* Customer and product analysis
+* KPI reporting
+* Reusable SQL views and functions
+* Query optimization
+* Performance profiling
+
+---
+
+# 🎯 Business Use Case
+
+A retail business could use this warehouse to answer questions such as:
+
+* How are sales and profit changing over time?
+* Which product categories generate the most profit?
+* Which customers contribute the most profit?
+* How does discounting affect profitability?
+* Which products are underperforming?
+* Which regions generate the highest revenue?
+* How long does each shipping method take?
+* Which products should be prioritized within each category?
+* How does current performance compare with previous periods?
+
+---
+
+# 📜 Project Status
+
+**Status:** ✅ Complete
+
+The project currently includes:
+
+* ✅ PostgreSQL data warehouse
+* ✅ Star schema
+* ✅ Staging layer
+* ✅ ETL pipeline
+* ✅ 18 analytical queries
+* ✅ Analytical views
+* ✅ Stored procedure
+* ✅ Table function
+* ✅ Query optimization example
+* ✅ Business insights
+
+---
+
+## 👤 Author
+
+**Mostafa Hassan**
+
+BIS Student | Data Analytics & Business Intelligence
+
+Focused on **SQL, Data Analytics, Business Intelligence, and Data Warehousing**.
