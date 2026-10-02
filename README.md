@@ -421,8 +421,3 @@ The project currently includes:
 * ✅ Table function
 * ✅ Query optimization example
 * ✅ Business insights
-**Mostafa Hassan**
-
-BIS Student | Data Analytics & Business Intelligence
-
-Focused on **SQL, Data Analytics, Business Intelligence, and Data Warehousing**.
