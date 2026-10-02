@@ -1,7 +1,7 @@
-# 🏪 Central Superstore — SQL Data Warehouse & Business Analytics
+# 🏪 Central Superstore - SQL Data Warehouse & Business Analytics
 
-> A PostgreSQL star-schema data warehouse built end-to-end from a raw retail
-> extract — normalized, indexed, and queried for real business insight.
+> A PostgreSQL star-schema data warehouse built end-to-end from raw retail
+> extract, normalized, indexed, and queried for real business insight.
 
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql&logoColor=white)]()
 [![SQL](https://img.shields.io/badge/SQL-Advanced-orange)]()
@@ -11,8 +11,8 @@
 
 ## 📌 Overview
 
-This project transforms a flat, denormalized retail dataset — **2,323 order
-line items** from the Central US region (2013–2017) — into a clean,
+This project transforms a flat, denormalized retail dataset - **2,323 orders **
+line items** from the Central US region (2013–2017) - into a clean,
 query-ready **star schema data warehouse**, then builds a full analytics
 layer on top of it: trend analysis, customer segmentation, profitability
 breakdowns, and operational KPIs.
