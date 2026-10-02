@@ -141,12 +141,12 @@ Central-Superstore/
 
 ### SQL Scripts
 
-| File               | Purpose                                                                            |
-| ------------------ | ---------------------------------------------------------------------------------- |
-| `01_schema.sql`    | Creates staging, dimension, and fact tables with PK/FK constraints and indexes     |
-| `02_load_data.sql` | Loads the raw CSV data into the staging table using PostgreSQL `COPY`              |
-| `03_etl.sql`       | Transforms staging data and populates the dimensional model                        |
-| `04_queries.sql`   | Contains analytical queries, views, routines, functions, and optimization examples |
+| File                   | Purpose                                                                                |
+| ---------------------- | -------------------------------------------------------------------------------------- |
+| `1- Setting up.sql`    | Creates staging, dimension, and fact tables with PK/FK constraints and indexes         |
+| `2- Loading Data.sql`  | Loads the raw CSV data into the staging table using PostgreSQL `COPY`                  |
+| `3- ETL.sql`           | Transforms staging data and populates the dimensional model                            |
+| `4- Queries.sql`       | Contains analytical queries, views, routines, functions, and optimization examples     |
 
 ---
 
@@ -244,7 +244,7 @@ CALL sp_kpi_report(
 );
 ```
 
-This allows KPI reporting without rewriting the underlying analytical query.
+This lets you run KPI reports without rewriting the underlying analytical query.
 
 ---
 
@@ -421,11 +421,6 @@ The project currently includes:
 * ✅ Table function
 * ✅ Query optimization example
 * ✅ Business insights
-
----
-
-## 👤 Author
-
 **Mostafa Hassan**
 
 BIS Student | Data Analytics & Business Intelligence
