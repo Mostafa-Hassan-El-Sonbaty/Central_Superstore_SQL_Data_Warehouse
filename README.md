@@ -188,7 +188,7 @@ CTEs are used to break complex analytical logic into readable stages, including:
 * Top-N analysis
 * Intermediate calculations
 
-### 🪄 CASE Expressions
+### CASE Expressions
 
 `CASE` logic is used to create analytical classifications such as:
 
