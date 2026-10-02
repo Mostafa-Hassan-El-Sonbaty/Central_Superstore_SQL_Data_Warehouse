@@ -10,9 +10,7 @@
 
 ## 📌 Overview
 
-This project transforms a flat, denormalized retail dataset—**2,323 order line items** from the Central US region (2013–2017)—into a clean, query-ready **star schema data warehouse**. A full analytics layer is built on top to analyze sales trends, customer segmentation, profitability breakdowns, and operational KPIs.
-
-*Built as part of **DEPI's Professional Data Analyst Track — Mini-Project 2**.*
+This project transforms a flat, denormalized retail dataset **2,323 order line items** from the Central US region (2013–2017) into a clean, query-ready **star schema data warehouse**. A full analytics layer is built on top to analyze sales trends, customer segmentation, profitability breakdowns, and operational KPIs.
 
 ---
 
@@ -34,7 +32,7 @@ The database relies on a centralized fact table connected to 5 dimensional table
 | `dim_ship_mode` | Dimension | 4 | Shipping method definitions |
 | `fact_sales` | Fact | 2,323 | Transactional metrics (Sales, Quantity, Discount, Profit) |
 
-**7 tables total** — fully normalized, surrogate-keyed, and indexed.
+**7 tables total** fully normalized, surrogate-keyed, and indexed.
 
 ---
 
@@ -42,10 +40,10 @@ The database relies on a centralized fact table connected to 5 dimensional table
 
 | File | What it does |
 |---|---|
-| `01_schema.sql` | Builds staging + dimension + fact tables, with PK/FK constraints and performance indexes |
-| `02_load_data.sql` | Bulk-loads the raw CSV into staging via `COPY` |
-| `03_etl.sql` | Transforms staging data into the star schema (dimensions + fact) |
-| `04_queries.sql` | 18 analytical queries, 2 views, 1 stored procedure, 1 table function, and a query-optimization example |
+| `1- Setting up.sql` | Builds staging + dimension + fact tables, with PK/FK constraints and performance indexes |
+| `2- Loading Data.sql` | Bulk-loads the raw CSV into staging via `COPY` |
+| `3- ETL.sql` | Transforms staging data into the star schema (dimensions + fact) |
+| `4- Queries.sql` | 18 analytical queries, 2 views, 1 stored procedure, 1 table function, and a query-optimization example |
 
 ---
 
