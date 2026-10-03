@@ -125,20 +125,6 @@ Analytical Queries
 
 ## 📁 Project Structure
 
-```text
-Central-Superstore/
-│
-├── 01_schema.sql
-├── 02_load_data.sql
-├── 03_etl.sql
-├── 04_queries.sql
-│
-├── data/
-│   └── superstore.csv
-│
-└── README.md
-```
-
 ### SQL Scripts
 
 | File                   | Purpose                                                                                |
